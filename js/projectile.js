@@ -1,14 +1,14 @@
 class bullet {
-    constructor(source, x, y, mx, my, speed, r, dmg) {
+    constructor(source, x, y, mx, my, dmg) {
         var a = mx - x;
         var b = my - y;
         var c = Math.sqrt(a * a + b * b);
         this.x = x;
         this.y = y;
-        this.speed = speed;
+        this.speed = 13;
         this.mx = a / c;
         this.my = b / c;
-        this.r = r;
+        this.r = 5;
         this.dmg = dmg;
         this.s = source;
     }
@@ -37,12 +37,12 @@ class bullet {
     }
 
     crashWith() {
+        var x = this.x;
+        var y = this.y;
+        var rad = this.r;
+        var dmg = this.dmg;
+        var hit = false;
         if (this.s == 0) {
-            var x = this.x;
-            var y = this.y;
-            var rad = this.r;
-            var dmg = this.dmg;
-            var hit = false;
             units.forEach(function (item, idx) {
                 var a = Math.abs(x - item.x);
                 var b = Math.abs(y - item.y);
@@ -54,6 +54,16 @@ class bullet {
                 }
             })
             if (hit) {
+                this.x = -100;
+            }
+        }
+        else {
+            var a = Math.abs(x - player.getXY().x);
+            var b = Math.abs(y - player.getXY().y);
+            var c = Math.sqrt(a * a + b * b);
+            var r = rad + player.getXY().r;
+            if (c < r) {
+                player.damage(dmg);
                 this.x = -100;
             }
         }

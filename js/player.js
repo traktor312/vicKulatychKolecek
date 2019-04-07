@@ -1,6 +1,6 @@
 var player = {
-    x: 100,
-    y: 100,
+    x: canvas.width / 2,
+    y: canvas.height / 2,
     r: 50,
     paint: function () {
         ctx.fillStyle = 'yellow';
@@ -8,11 +8,15 @@ var player = {
         ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
         ctx.fill();
         ctx.stroke();
+        ctx.fillStyle = 'black';
+        ctx.fillRect(this.x - 45, this.y - this.r - 25, 90, 10);
+        ctx.fillStyle = 'red';
+        ctx.fillRect(this.x - 45, this.y - this.r - 25, 90 * (this.hp / this.maxHp), 10);
     },
     getXY: function () {
-        return { x: this.x, y: this.y };
+        return { x: this.x, y: this.y, r: this.r };
     },
-    speed: 4,
+    speed: 5,
     up: false,
     down: false,
     right: false,
@@ -100,6 +104,7 @@ var player = {
     fx: 0,
     fy: 0,
     angry: false,
+    dmg: 10,
     setFire: function (x, y) {
         this.fx = x;
         this.fy = y;
@@ -115,7 +120,23 @@ var player = {
     },
     fire: function () {
         if (this.angry) {
-            projectiles.push(new bullet(0, this.x, this.y, this.fx, this.fy, 10, 5, 10));
+            projectiles.push(new bullet(0, this.x, this.y, this.fx, this.fy, this.dmg));
         }
     },
+    maxHp: 100,
+    hp: 100,
+    damage: function (dmg) {
+        this.hp -= dmg;
+        if (this.hp <= 0) {
+            phase = 1;
+        }
+    },
+    heal: function () {
+        if (this.hp < this.maxHp) {
+            this.hp += this.maxHp / 40;
+            if (this.hp > this.maxHp) {
+                this.hp = this.maxHp;
+            }
+        }
+    }
 }

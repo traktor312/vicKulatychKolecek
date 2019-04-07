@@ -1,5 +1,5 @@
 class unit {
-    constructor(x, y, speed, r, dmg, hp) {
+    constructor(x, y, speed, r, dmg, hp, reload) {
         this.x = x;
         this.y = y;
         this.speed = speed;
@@ -8,6 +8,9 @@ class unit {
         this.mx = 0;
         this.my = 0;
         this.hp = hp;
+        this.maxHp = hp;
+        this.reload = reload;
+        this.reloadTime = reload;
         this.setMove();
     }
 
@@ -49,6 +52,22 @@ class unit {
         ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
         ctx.fill();
         ctx.stroke();
+        ctx.fillStyle = 'black';
+        ctx.fillRect(this.x - 45, this.y - this.r - 25, 90, 10);
+        ctx.fillStyle = 'red';
+        ctx.fillRect(this.x - 45, this.y - this.r - 25, 90 * (this.hp / this.maxHp), 10);
+    }
+
+    fire() {
+        if (this.reaload > 0) {
+            this.reaload -= 0.02;
+        }
+        else {
+            this.reaload = this.reloadTime;
+            var fx = player.getXY().x;
+            var fy = player.getXY().y;
+            projectiles.push(new bullet(1, this.x, this.y, fx, fy, this.dmg));
+        }
     }
 }
 
@@ -57,6 +76,11 @@ function clearUnit() {
         if (item.hp <= 0) {
             units.splice(idx, 1);
             score++;
+            player.heal();
+            levelScore++;
+            if (levelScore >= nextLevelScore) {
+                setSpawnInterval();
+            }
         }
     })
 }
