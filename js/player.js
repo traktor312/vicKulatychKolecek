@@ -10,8 +10,10 @@ var player = {
         ctx.stroke();
         ctx.fillStyle = 'black';
         ctx.fillRect(this.x - 45, this.y - this.r - 25, 90, 10);
-        ctx.fillStyle = 'red';
-        ctx.fillRect(this.x - 45, this.y - this.r - 25, 90 * (this.hp / this.maxHp), 10);
+        if (this.hp > 0) {
+            ctx.fillStyle = 'red';
+            ctx.fillRect(this.x - 45, this.y - this.r - 25, 90 * (this.hp / this.maxHp), 10);
+        }
     },
     getXY: function () {
         return { x: this.x, y: this.y, r: this.r };
@@ -138,5 +140,11 @@ var player = {
                 this.hp = this.maxHp;
             }
         }
+    },
+    levelUp: function () {
+        var l = lvl - 1;
+        this.dmg = 10 + 0.03 * l;
+        this.maxHp = 100 + 3 * l;
+        this.hp = 100 + 3 * l;
     }
 }

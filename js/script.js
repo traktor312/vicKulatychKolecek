@@ -1,21 +1,4 @@
 var stepInterval = setInterval(step, 20);
-var spawnTimeOut = 3000;
-var spawnInterval;
-var levelScore = 0;
-var nextLevelScore = 10;
-
-function setSpawnInterval() {
-    clearInterval(spawnInterval);
-    spawnInterval = setInterval(spawn, spawnTimeOut);
-    spawnTimeOut -= Math.floor(spawnTimeOut / 10);
-    nextLevelScore += 5;
-    levelScore = 0;
-}
-setSpawnInterval();
-
-function spawn() {
-    units.push(new unit(rand(canvas.width / 10, canvas.width * 9 / 10), rand(canvas.height / 10, canvas.height * 9 / 10), 5, 40, 10, 100, 0.8));
-}
 
 function clearCanvas(color) {
     ctx.fillStyle = color;
@@ -28,6 +11,9 @@ function clearCanvas(color) {
 function step() {
     if (phase == 0) {
         clearCanvas('white');
+        if (units.length == 0) {
+            spawn();
+        }
         player.move();
         player.fire();
         projectiles.forEach(function (item) {

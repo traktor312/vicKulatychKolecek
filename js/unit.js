@@ -1,3 +1,9 @@
+var unitSpeed = 5;
+var unitR = 40;
+var unitDmg = 3;
+var unitHp = 20;
+var unitReload = 1.2;
+
 class unit {
     constructor(x, y, speed, r, dmg, hp, reload) {
         this.x = x;
@@ -54,8 +60,10 @@ class unit {
         ctx.stroke();
         ctx.fillStyle = 'black';
         ctx.fillRect(this.x - 45, this.y - this.r - 25, 90, 10);
-        ctx.fillStyle = 'red';
-        ctx.fillRect(this.x - 45, this.y - this.r - 25, 90 * (this.hp / this.maxHp), 10);
+        if (this.hp > 0) {
+            ctx.fillStyle = 'red';
+            ctx.fillRect(this.x - 45, this.y - this.r - 25, 90 * (this.hp / this.maxHp), 10);
+        }
     }
 
     fire() {
@@ -77,10 +85,19 @@ function clearUnit() {
             units.splice(idx, 1);
             score++;
             player.heal();
-            levelScore++;
-            if (levelScore >= nextLevelScore) {
-                setSpawnInterval();
-            }
         }
     })
+}
+
+function spawn() {
+    unitDmg += 0.3;
+    unitHp += 4;
+    unitReload -= 0.01;
+    lvl++;
+    player.levelUp();
+    for (var i = 0; i < Math.sqrt(score / 2) + 1; i++) {
+        var x = rand(canvas.width / 10, canvas.width * 9 / 10);
+        var y = rand(canvas.height / 10, canvas.height * 9 / 10);
+        units.push(new unit(x, y, unitSpeed, unitR, unitDmg, unitHp, unitReload));
+    }
 }
